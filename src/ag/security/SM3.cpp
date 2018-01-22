@@ -1,6 +1,5 @@
-#include <ag/core/Integer.h>
-#include <ag/crypto/SM3.h>
-#include <cwchar>
+#include "Common.h"
+#include "SM3.h"
 
 namespace ag {
 

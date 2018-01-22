@@ -1,9 +1,9 @@
 #ifndef CN_SM3_H_
 #define CN_SM3_H_
 
-#include <ag/core/Integer.h>
-#include <ag/crypto/Digest.h>
+#include <ag/security/Digest.h>
 #include <cstdint>
+#include <string>
 
 namespace ag {
 

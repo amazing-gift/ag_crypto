@@ -1,8 +1,9 @@
-#ifndef AG_CRYPTO_DIGEST_H_
-#define AG_CRYPTO_DIGEST_H_
+#ifndef AG_SECURITY_DIGEST_H_
+#define AG_SECURITY_DIGEST_H_
 
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace ag {
 
@@ -21,6 +22,8 @@ public:
 };
 
 typedef std::shared_ptr<Digest> DigestPtr;
+typedef std::vector<std::string> DigestNameList;
+typedef std::shared_ptr<std::vector<std::string>> DigestNameListPtr;
 
 }
 
