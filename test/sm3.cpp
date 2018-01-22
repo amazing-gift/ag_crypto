@@ -10,6 +10,9 @@ using namespace ag;
 
 int test(DigestFactoryPtr digestFactoryPtr, const std::string & name, void * data, int length) {
     auto digest = digestFactoryPtr->createDigest(name);
+    if (!digest) {
+        return 0;
+    }
 
     std::vector<uint8_t> result(digest->getLength());
 
