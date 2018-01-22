@@ -1,5 +1,6 @@
-#include "Common.h"
 #include "SM3.h"
+#include "UInt32.h"
+#include "UInt64.h"
 
 namespace ag {
 
@@ -29,11 +30,11 @@ static inline uint32_t GG16(uint32_t x, uint32_t y, uint32_t z) {
 }
 
 static inline uint32_t P0(uint32_t x) {
-    return x ^ rotateUInt32(x, 9) ^ rotateUInt32(x, 17);
+    return x ^ UInt32::rotate(x, 9) ^ UInt32::rotate(x, 17);
 }
 
 static inline uint32_t P1(uint32_t x) {
-    return x ^ rotateUInt32(x, 15) ^ rotateUInt32(x, 23);
+    return x ^ UInt32::rotate(x, 15) ^ UInt32::rotate(x, 23);
 }
 
 inline int SM3::updateBlock(const void * block) {
@@ -43,11 +44,11 @@ inline int SM3::updateBlock(const void * block) {
     register int j;
 
     for (j = 0; j < 16; ++j) {
-        readUInt32(&W[j], data + j * 4);
+        UInt32::read(&W[j], data + j * 4);
     }
 
     for (j = 16; j < 68; j++) {
-        W[j] = P1(W[j - 16] ^ W[j - 9] ^ rotateUInt32(W[j - 3], 15)) ^ rotateUInt32(W[j - 13], 7) ^ W[j - 6];
+        W[j] = P1(W[j - 16] ^ W[j - 9] ^ UInt32::rotate(W[j - 3], 15)) ^ UInt32::rotate(W[j - 13], 7) ^ W[j - 6];
     }
 
     for (j = 0; j < 64; j++) {
@@ -64,31 +65,31 @@ inline int SM3::updateBlock(const void * block) {
     H = v[7];
 
     for (j = 0; j < 16; j++) {
-        SS1 = rotateUInt32((rotateUInt32(A, 12) + E + rotateUInt32(T[j], j)), 7);
-        SS2 = SS1 ^ rotateUInt32(A, 12);
+        SS1 = UInt32::rotate((UInt32::rotate(A, 12) + E + UInt32::rotate(T[j], j)), 7);
+        SS2 = SS1 ^ UInt32::rotate(A, 12);
         TT1 = FF0(A, B, C) + D + SS2 + W1[j];
         TT2 = GG0(E, F, G) + H + SS1 + W[j];
         D = C;
-        C = rotateUInt32(B, 9);
+        C = UInt32::rotate(B, 9);
         B = A;
         A = TT1;
         H = G;
-        G = rotateUInt32(F, 19);
+        G = UInt32::rotate(F, 19);
         F = E;
         E = P0(TT2);
     }
 
     for (j = 16; j < 64; j++) {
-        SS1 = rotateUInt32((rotateUInt32(A, 12) + E + rotateUInt32(T[j], j)), 7);
-        SS2 = SS1 ^ rotateUInt32(A, 12);
+        SS1 = UInt32::rotate((UInt32::rotate(A, 12) + E + UInt32::rotate(T[j], j)), 7);
+        SS2 = SS1 ^ UInt32::rotate(A, 12);
         TT1 = FF16(A, B, C) + D + SS2 + W1[j];
         TT2 = GG16(E, F, G) + H + SS1 + W[j];
         D = C;
-        C = rotateUInt32(B, 9);
+        C = UInt32::rotate(B, 9);
         B = A;
         A = TT1;
         H = G;
-        G = rotateUInt32(F, 19);
+        G = UInt32::rotate(F, 19);
         F = E;
         E = P0(TT2);
     }
@@ -174,14 +175,14 @@ int SM3::final(void * data) {
     }
 
     uint8_t dataLengthBinary[8];
-    writeUInt64(dataLength * 8, dataLengthBinary);
+    UInt64::write(dataLength * 8, dataLengthBinary);
     errorCode = update(dataLengthBinary, 8);
     if (errorCode != 0) {
         return errorCode;
     }
 
     for (int i = 0; i < 8; ++i) {
-        writeUInt32(v[i], digestPtr + i * 4);
+        UInt32::write(v[i], digestPtr + i * 4);
     }
 
     return 0;
