@@ -1,5 +1,5 @@
-#include "DefaultSecurityFactory.h"
-#include "SM3.h"
+#include <ag/security/DefaultSecurityFactory.h>
+#include <ag/security/SM3.h>
 
 namespace ag {
 
@@ -21,7 +21,8 @@ DigestNameListPtr DefaultSecurityFactory::getDigestNameList() {
 }
 
 DigestPtr DefaultSecurityFactory::createDigest(const std::string & digestName) {
-    return digestCreatorMap.find(digestName) == digestCreatorMap.end() ? DigestPtr() : digestCreatorMap[digestName]();
+    auto entry = digestCreatorMap.find(digestName);
+    return entry == digestCreatorMap.end() ? DigestPtr() : entry->second();
 }
 
 }
